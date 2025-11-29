@@ -29,3 +29,5 @@ app/api/query/post/page.js = *localhost:3000/api/query/post*
 ### - *Also only 1 page.jsx/js per folder* ###
 
 ### As you can see the folder structure is the routes
+
+*- DataBase Schema is in lib/schema/index.js*

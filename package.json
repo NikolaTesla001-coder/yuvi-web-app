@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "biome check",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "test:db": "node -r dotenv/config test-connection.js",
+    "db:push": "npx -r dotenv/config drizzle-kit push --verbose"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
