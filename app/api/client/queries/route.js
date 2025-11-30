@@ -1,3 +1,4 @@
+import { authOptions } from "@/lib/auth/authOptions";
 import { db } from "@/lib/db";
 import { queries } from "@/lib/schema";
 import { randomUUID } from "crypto";
@@ -5,6 +6,12 @@ import { randomUUID } from "crypto";
 export async function POST(req) {
   try {
     const { questionTitle, questionBody, clientId, categoryId } = await req.json();
+
+    session = await getServerSession(authOptions);
+
+    if (session.role != "client") {
+      return Response.json({ error: "Error, Client not authenticated" }, { status: 500 });
+    }
 
     if (!clientId || !categoryId) {
       return Response.json({ error: "clientId and categoryId required" }, { status: 400 });
