@@ -1,4 +1,4 @@
-import db from "@/lib/db";
+import { db } from "@/lib/db";
 import { queries, answers, experts } from "@/lib/schema";
 import { eq, desc } from "drizzle-orm";
 import { randomUUID } from "crypto";
@@ -90,7 +90,7 @@ export async function POST(request) {
 
     const queryItem = queryData[0];
 
-    if (queryItem.categoryId !== expert.categorySlug) {
+    if (queryItem.categoryId !== expert.categoryId) {
       return new Response(
         JSON.stringify({
           error: "Expert cannot answer queries outside their domain",

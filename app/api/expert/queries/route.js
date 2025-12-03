@@ -32,7 +32,7 @@ export async function GET(request) {
 
     const expert = expertData[0];
 
-    const domainCategoryId = expert.categorySlug;
+    const domainCategoryId = expert.categoryId;
 
     const domainQueries = await db
       .select()
