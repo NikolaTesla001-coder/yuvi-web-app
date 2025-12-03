@@ -1,3 +1,6 @@
+// yuvi-web-app/components/expert/ExpertBottomNav.jsx
+
+
 import { Home, MessageSquare, User } from 'lucide-react';
 
 export default function ExpertBottomNav({ activeTab, onTabChange }) {

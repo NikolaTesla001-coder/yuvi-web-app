@@ -1,3 +1,5 @@
+// yuvi-web-app/components/expert/HomeTab.jsx
+"use client";
 import { useState } from 'react';
 import { mockQueries } from '@/lib/mockData';
 import { ArrowLeft, Send, Clock, CheckCircle2 } from 'lucide-react';
@@ -9,9 +11,10 @@ export default function HomeTab() {
   // Calculate pending queries
   const pendingCount = mockQueries.filter(q => q.status === 'pending').length;
 
+  // Detail View (Query Answer Form)
   if (selectedQuery) {
     return (
-      <div className="animate-in slide-in-from-right duration-300 pb-24">
+      <div className="animate-in slide-in-from-right duration-300 pb-24 px-4">
         <button 
           onClick={() => setSelectedQuery(null)}
           className="flex items-center text-gray-400 hover:text-white mb-6 transition-colors"
@@ -72,6 +75,7 @@ export default function HomeTab() {
     );
   }
 
+  // List View
   return (
     <div className="animate-in fade-in duration-500 pb-24 space-y-8">
       {/* Header Section */}
@@ -91,7 +95,7 @@ export default function HomeTab() {
         </h1>
       </div>
       
-      {/* Pending Queries Stats Box - Responsive class for full width on mobile */}
+      {/* Pending Queries Stats Box */}
       <div className="mx-auto max-w-full sm:max-w-sm transform hover:scale-[1.02] transition-transform duration-300 px-4">
         <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 flex items-center justify-between shadow-lg shadow-black/20 backdrop-blur-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rounded-full blur-2xl -mr-10 -mt-10" />
@@ -126,7 +130,6 @@ export default function HomeTab() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-start gap-2 mb-1">
-                    {/* Title padding adjusted for badge overlap */}
                     <h3 className="text-white font-semibold group-hover:text-cyan-400 transition-colors line-clamp-2 text-base pr-16 sm:pr-20 leading-snug">
                       {query.title}
                     </h3>
