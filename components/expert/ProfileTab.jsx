@@ -6,6 +6,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import Loading from '../ui/Loading';
 import { fetchAllQueries } from '@/lib/fetchFunctions/fetchAllQueries';
+import axios from 'axios';
 
 export default function ProfileTab() {
 
@@ -13,13 +14,26 @@ export default function ProfileTab() {
   const user = session.user
 
   const [numberOfQueries, setNumberOfQueries] = useState(0)
+  const [answeredQueries, setAnsweredQueries] = useState([])
 
   useEffect(() => {
-    async function load() {
+    async function fetchQueries() {
       const res = await fetchAllQueries();
       setNumberOfQueries(res.length);
     }
-    load();
+
+    async function fetchAnsweredQueries() {
+      try {
+        const response = await axios.get("/api/expert/queries/answered")
+        console.log("answered queries: ", response.data)
+        setAnsweredQueries(response.data)
+      } catch (error) {
+        console.error(`error fetching answered queries ${error}`)
+      } 
+    }
+
+    fetchQueries();
+    fetchAnsweredQueries()
   }, []);
 
   if (status === "loading") {
@@ -56,7 +70,7 @@ export default function ProfileTab() {
               <p className="text-[#6b7280] text-xs">Queries</p>
             </div>
             <div className="text-center bg-[#0f172a] sm:bg-transparent p-3 sm:p-0 rounded-lg">
-              <div className="text-2xl font-bold text-[#38bdf8]">{expertProfile.stats.answers}</div>
+              <div className="text-2xl font-bold text-[#38bdf8]">{answeredQueries.length}</div>
               <p className="text-[#6b7280] text-xs">Answers</p>
             </div>
           </div>
@@ -66,13 +80,10 @@ export default function ProfileTab() {
         <div className="bg-[#020617] border border-[#1f2937] rounded-lg p-6">
           <h3 className="text-lg font-bold text-white mb-4">Recently Answered</h3>
           <div className="space-y-3">
-            {expertProfile.answeredQueries.map((query) => (
-              <div key={query.id} className="bg-[#0f172a] border border-[#1f2937] rounded p-3">
+            {answeredQueries.map((query) => (
+              <div key={query.queryId} className="bg-[#0f172a] border border-[#1f2937] rounded p-3">
                 <p className="text-white text-sm font-semibold line-clamp-2">
-                  {query.title}
-                </p>
-                <p className="text-[#6b7280] text-xs mt-1">
-                  💬 {query.answers} answers
+                  {query.questionTitle}
                 </p>
               </div>
             ))}

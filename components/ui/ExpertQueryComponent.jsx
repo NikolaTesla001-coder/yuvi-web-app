@@ -1,9 +1,10 @@
 import { Clock, CheckCircle2 } from 'lucide-react';
+import Link from 'next/link';
 
-export default function ExpertQueryComponent({ query, setSelectedQuery }) {
+export default function ExpertQueryComponent({ query }) {
   return (
+    <Link href={`home/${query.queryId}`}>
     <div
-      onClick={() => setSelectedQuery(query)}
       className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 sm:p-5 
                  hover:border-cyan-500/50 hover:bg-slate-900 transition-all cursor-pointer 
                  group relative overflow-hidden shadow-md"
@@ -53,5 +54,6 @@ export default function ExpertQueryComponent({ query, setSelectedQuery }) {
         </span>
       </div>
     </div>
+    </Link>
   );
 }
