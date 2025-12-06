@@ -1,20 +1,27 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import SearchBar from '@/components/client/home/SearchBar';
 import QueriesList from '@/components/client/home/QueriesList';
-import { mockQueries } from '@/lib/mockData';
 import QueryDetailModal from '@/components/client/modals/QueryDetailModal';
+import { fetchAllQueries } from '@/lib/apiFunctions/fetchAllQueries';
 
 export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedQuery, setSelectedQuery] = useState(null);
+  const [queries, setQueries] = useState([]);
   const router = useRouter();
 
-  const filteredQueries = mockQueries.filter(
-    (q) =>
-      q.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      q.category.toLowerCase().includes(searchTerm.toLowerCase())
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await fetchAllQueries();
+      setQueries(data || []); 
+    };
+
+    loadData();
+  }, []);
+  const filteredQueries = queries.filter((q) =>
+    q.questionTitle?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (

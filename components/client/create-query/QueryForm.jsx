@@ -1,13 +1,28 @@
 'use client';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { CATEGORIES } from '@/lib/constants';
+import axios from 'axios';
 
 export default function QueryForm({ onSubmit, isLoading }) {
+  const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
     category: '',
     description: '',
   });
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('/api/client/queries/category');
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  },[]);
 
   const [charCounts, setCharCounts] = useState({
     title: 0,
@@ -63,9 +78,9 @@ export default function QueryForm({ onSubmit, isLoading }) {
           className="w-full px-4 py-3 bg-[#1a1a2e] border border-[#2a2a3e] rounded-lg text-white focus:outline-none focus:border-[#00d4ff] focus:ring-2 focus:ring-[#00d4ff]/20 transition duration-300 appearance-none cursor-pointer"
         >
           <option value="">Select a category</option>
-          {CATEGORIES.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
+          {categories.map((cat) => (
+            <option key={cat.categoryId} value={cat.categoryId}>
+              {cat.name}
             </option>
           ))}
         </select>

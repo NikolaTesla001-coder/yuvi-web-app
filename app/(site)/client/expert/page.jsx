@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import ExpertList from '@/components/client/expert/ExpertList';
 import ExpertDetailPage from '@/components/client/modals/ExpertDetailPage';
 import ExpertChatModal from '@/components/client/modals/ExpertChatModal';

@@ -1,11 +1,36 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MessageList from '@/components/client/expert-dm/MessageList';
 import ExpertChatModal from '@/components/client/modals/ExpertChatModal';
-import { mockMessages } from '@/lib/mockData';
+import axios from 'axios';
 
 export default function ExpertDMPage() {
+  const [messages, setMessages] = useState([]);
   const [selectedMessage, setSelectedMessage] = useState(null);
+
+  useEffect(() => {
+    const loadMessages = async () => {
+      try {
+        const res = await axios.get('/api/chat/inbox');
+        console.log('Inbox Data:', res.data);
+
+        // Map API response to the shape expected by MessageList
+        const formattedMessages = res.data.map((convo) => ({
+          id: convo.conversationId,
+          expertId: convo.expertId,
+          expertName: convo.expertName,
+          lastMessageId: convo.lastMessageId,
+          updatedAt: convo.updatedAt,
+        }));
+
+        setMessages(formattedMessages);
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+
+    loadMessages();
+  }, []);
 
   return (
     <div className="animate-fadeIn">
@@ -20,7 +45,7 @@ export default function ExpertDMPage() {
         </p>
       </div>
 
-      <MessageList messages={mockMessages} onMessageClick={setSelectedMessage} />
+      <MessageList messages={messages} onMessageClick={setSelectedMessage} />
 
       {selectedMessage && (
         <ExpertChatModal

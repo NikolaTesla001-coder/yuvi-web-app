@@ -23,7 +23,7 @@ export default function ExpertDetailPage({ expert, onClose }) {
         <div className="flex items-center justify-between bg-gradient-to-r from-[#00d4ff]/10 to-[#ff006e]/10 border-b border-[#2a2a3e] px-4 sm:px-6 py-4 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#00d4ff] to-[#5f00d2] flex items-center justify-center text-white font-bold shadow-md">
-              {expert.name.charAt(0)}
+              {expert.expertName}
             </div>
             <div>
               <h2 className="font-bold text-white text-base sm:text-lg flex items-center gap-2">

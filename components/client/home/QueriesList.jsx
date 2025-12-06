@@ -34,8 +34,8 @@ export default function QueriesList({ queries, onQuerySelect, isLoading }) {
           {queries.length}
         </span>
       </h2>
-      {queries.map((query) => (
-        <QueryCard key={query.id} query={query} onClick={() => onQuerySelect(query)} />
+      {queries.map((query,idx) => (
+        <QueryCard key={idx} query={query} onClick={() => onQuerySelect(query)} />
       ))}
     </div>
   );

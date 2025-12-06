@@ -1,11 +1,11 @@
 import { ilike, eq, and, desc } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { categories, queries } from "@/lib/schema";
+import { categories, queries, clients,answers } from "@/lib/schema";
 
 export async function GET(req) {
   try {
     console.log("get all queries api hitted");
-    
+
     const url = new URL(req.url);
 
     const q = url.searchParams.get("q")?.trim() || null;
@@ -15,12 +15,11 @@ export async function GET(req) {
 
     let conditions = [];
 
-    // Add search filter
+    // Search filter
     if (q) conditions.push(ilike(queries.questionTitle, `%${q}%`));
 
-    // Add category filter
+    // Category filter
     if (categoryId) {
-      // validate category exists
       const exists = await db
         .select()
         .from(categories)
@@ -33,22 +32,37 @@ export async function GET(req) {
       conditions.push(eq(queries.categoryId, categoryId));
     }
 
-    const whereCondition = conditions.length
-      ? and(...conditions)
-      : undefined;
+    const whereCondition = conditions.length ? and(...conditions) : undefined;
 
+    // ⭐ JOIN categories + clients
     const result = await db
-      .select()
+      .select({
+        queryId: queries.queryId,
+        questionTitle: queries.questionTitle,
+        question: queries.questionBody,
+        createdAt: queries.createdAt,
+
+        // category
+        categoryId: queries.categoryId,
+        categoryName: categories.name,
+
+        // client
+        clientId: queries.clientId,
+        clientName: clients.username,
+      })
       .from(queries)
+      .leftJoin(categories, eq(queries.categoryId, categories.categoryId))
+      .leftJoin(clients, eq(queries.clientId, clients.clientId))
       .where(whereCondition)
       .orderBy(desc(queries.createdAt))
       .limit(limit)
       .offset((page - 1) * limit);
 
-    const hasMore = result.length === limit;    
+    const hasMore = result.length === limit;
 
-    console.log("get all queries api result: ", result)
-    return Response.json({data: result, hasMore}, { status: 200 });
+    console.log("get all queries api result:", result);
+
+    return Response.json({ data: result, hasMore }, { status: 200 });
 
   } catch (err) {
     console.error("API ERROR:", err);

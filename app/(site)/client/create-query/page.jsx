@@ -2,8 +2,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import QueryForm from '@/components/client/create-query/QueryForm';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
 
 export default function CreateQueryPage() {
+  const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -12,9 +15,16 @@ export default function CreateQueryPage() {
     try {
       // TODO: Replace with actual API call
       console.log('Submitting query:', formData);
+
+      const body = {
+        questionTitle: formData.title,
+        questionBody: formData.description,
+        categoryId: formData.category,
+        clientId: session.user.id
+      }
       
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await axios.post('/api/client/queries', body);
       
       // Show success message
       alert('Question posted successfully!');
